@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: topupkilat-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: topupkilat123
+      POSTGRES_DB: topupkilat
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - topupkilat-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Queue
+  redis:
+    image: redis:7-alpine
+    container_name: topupkilat-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - topupkilat-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Next.js Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: topupkilat-web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:topupkilat123@postgres:5432/topupkilat
+      REDIS_URL: redis://redis:6379
+      AUTH_SECRET: ${AUTH_SECRET:-your-super-secret-auth-key-change-this-in-production}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-mock}
+      PAYMENT_API_KEY: ${PAYMENT_API_KEY:-}
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-}
+      TOPUP_PROVIDER: ${TOPUP_PROVIDER:-mock}
+      TOPUP_API_KEY: ${TOPUP_API_KEY:-}
+      TOPUP_API_SECRET: ${TOPUP_API_SECRET:-}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:3000}
+      APP_NAME: TopUpKilat
+      SUPPORT_EMAIL: support@topupkilat.example
+      CS_WHATSAPP: +62-8xx-xxxx-xxxx
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - topupkilat-network
+    volumes:
+      - ./public:/app/public
+      - ./prisma:/app/prisma
+
+  # Queue Worker (using same image as web)
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: topupkilat-worker
+    restart: unless-stopped
+    command: ["node", "workers/index.js"]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:topupkilat123@postgres:5432/topupkilat
+      REDIS_URL: redis://redis:6379
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-mock}
+      PAYMENT_API_KEY: ${PAYMENT_API_KEY:-}
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-}
+      TOPUP_PROVIDER: ${TOPUP_PROVIDER:-mock}
+      TOPUP_API_KEY: ${TOPUP_API_KEY:-}
+      TOPUP_API_SECRET: ${TOPUP_API_SECRET:-}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:3000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - topupkilat-network
+
+networks:
+  topupkilat-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ProductType {
+  GAME
+  EWALLET
+  PULSA
+  DATA
+  STREAMING
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum OrderStatus {
+  PENDING
+  WAITING_PAYMENT
+  PAID
+  PROCESSING
+  SUCCESS
+  FAILED
+  EXPIRED
+  REFUNDED
+}
+
+enum VoucherStatus {
+  AVAILABLE
+  RESERVED
+  USED
+}
+
+enum PromoDiscountType {
+  PERCENT
+  FLAT
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  phone         String?
+  passwordHash  String
+  role          Role     @default(USER)
+  twoFASecret   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  orders        Order[]
+  sessions      Session[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  sessionToken String   @unique
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+}
+
+model Product {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  type         ProductType
+  name         String
+  providerKey  String
+  iconUrl      String?
+  status       ProductStatus @default(ACTIVE)
+  description  String?
+  instruction  String?       @db.Text
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  denominations Denomination[]
+  orders        Order[]
+  voucherStock  VoucherStock[]
+  
+  @@index([slug])
+  @@index([type, status])
+}
+
+model Denomination {
+  id           String   @id @default(cuid())
+  productId    String
+  code         String?  // VIP Reseller product code
+  label        String
+  amountNumeric Int
+  priceSell    Int
+  costBuy      Int
+  feeFlat      Int      @default(0)
+  feePct       Float    @default(0)
+  isPopular    Boolean  @default(false)
+  sortOrder    Int      @default(0)
+  stock        Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orders       Order[]
+  
+  @@index([productId])
+  @@unique([productId, code])
+}
+
+model Order {
+  id               String      @id @default(cuid())
+  code             String      @unique @default(cuid())
+  userId           String?
+  productId        String
+  denominationId   String
+  targetJson       Json
+  contactEmail     String
+  contactWhatsapp  String
+  promoCode        String?
+  gateway          String
+  paymentMethod    String?
+  paymentRef       String?
+  status           OrderStatus @default(PENDING)
+  total            Int
+  providerOrderId  String?
+  providerStatus   String?
+  errorMessage     String?
+  idempotencyKey   String?     @unique
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  paidAt           DateTime?
+  successAt        DateTime?
+  
+  user             User?       @relation(fields: [userId], references: [id])
+  product          Product     @relation(fields: [productId], references: [id])
+  denomination     Denomination @relation(fields: [denominationId], references: [id])
+  voucherStock     VoucherStock[]
+  transactionLogs  TransactionLog[]
+  
+  @@index([code])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model VoucherStock {
+  id              String        @id @default(cuid())
+  productId       String
+  code            String
+  status          VoucherStatus @default(AVAILABLE)
+  assignedOrderId String?
+  reservedAt      DateTime?
+  usedAt          DateTime?
+  createdAt       DateTime      @default(now())
+  
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order           Order?        @relation(fields: [assignedOrderId], references: [id])
+  
+  @@unique([productId, code])
+  @@index([productId, status])
+  @@index([assignedOrderId])
+}
+
+model WebhookEvent {
+  id           String    @id @default(cuid())
+  source       String
+  eventId      String    @unique
+  signature    String?
+  payloadJson  Json
+  receivedAt   DateTime  @default(now())
+  processedAt  DateTime?
+  error        String?
+  
+  @@index([source, eventId])
+  @@index([receivedAt])
+}
+
+model TransactionLog {
+  id          String   @id @default(cuid())
+  orderId     String
+  type        String
+  payloadJson Json
+  createdAt   DateTime @default(now())
+  
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@index([orderId])
+  @@index([type])
+}
+
+model Promo {
+  id           String            @id @default(cuid())
+  code         String            @unique
+  discountType PromoDiscountType
+  value        Float
+  minPurchase  Int               @default(0)
+  maxDiscount  Int?
+  startAt      DateTime
+  endAt        DateTime
+  usageLimit   Int?
+  usedCount    Int               @default(0)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  
+  @@index([code])
+  @@index([startAt, endAt])
+}
+
+model Configuration {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+  
+  @@index([key])
+}
