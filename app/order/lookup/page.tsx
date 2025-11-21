@@ -6,10 +6,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ArrowLeft, Search, Package, Clock, CheckCircle, XCircle, RefreshCw } from "lucide-react";
 import Link from "next/link";
 
+interface OrderDetail {
+  code: string;
+  status: string;
+  createdAt: string;
+  total: number;
+  product?: { name: string };
+  denomination?: { label: string };
+  paidAt?: string;
+  successAt?: string;
+  errorMessage?: string;
+}
+
 export default function OrderLookupPage() {
   const [orderCode, setOrderCode] = useState('');
   const [email, setEmail] = useState('');
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -120,12 +132,25 @@ export default function OrderLookupPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
+          {/* Helper Info */}
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center">
+              <Package className="h-5 w-5 mr-2" />
+              Cara Melacak Pesanan
+            </h3>
+            <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+              <li>• Masukkan <strong>Kode Pesanan</strong> yang kamu terima (format: TKL2xxxxx)</li>
+              <li>• Masukkan <strong>Email</strong> yang kamu gunakan saat checkout</li>
+              <li>• Klik tombol &quot;Cari Pesanan&quot; untuk melihat status real-time</li>
+            </ul>
+          </div>
+
           {/* Lookup Form */}
-          <Card>
+          <Card className="shadow-lg">
             <CardHeader>
               <CardTitle>Cek Status Pesanan</CardTitle>
               <CardDescription>
-                Masukkan kode pesanan dan email yang digunakan saat order
+                Pantau status transaksi kamu secara real-time
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -187,13 +212,16 @@ export default function OrderLookupPage() {
           {order && (
             <Card className="mt-6">
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                   <CardTitle>Detail Pesanan</CardTitle>
-                  <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2 ${getStatusColor(order.status)}`}>
+                  <div className={`px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 ${getStatusColor(order.status)} border-2 ${order.status === 'SUCCESS' ? 'border-green-200' : order.status === 'FAILED' || order.status === 'EXPIRED' ? 'border-red-200' : order.status === 'WAITING_PAYMENT' ? 'border-yellow-200' : 'border-blue-200'}`}>
                     {getStatusIcon(order.status)}
                     {getStatusText(order.status)}
                   </div>
                 </div>
+                <CardDescription className="mt-2">
+                  Kode: <span className="font-mono font-semibold text-gray-900 dark:text-white">{order.code}</span>
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">

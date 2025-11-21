@@ -12,9 +12,17 @@ import {
   Search,
   Tv,
   Headphones,
+  CheckCircle,
+  Users,
+  Clock,
+  CreditCard,
+  Lock,
+  FileText,
+  ArrowRight,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Head from 'next/head';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -57,18 +65,73 @@ export default function Home() {
   const testimonials = [
     {
       name: "Andi Pratama",
+      role: "Streamer Mobile Legends",
+      avatar: "AP",
       rating: 5,
       comment: "Top up ML super cepat! Langsung masuk dalam 5 detik 👍"
     },
     {
       name: "Sarah N.",
+      role: "Pelanggan Setia",
+      avatar: "SN",
       rating: 5,
       comment: "Harga paling murah dan proses otomatis. Recommended!"
     },
     {
       name: "Reza Gaming",
+      role: "Pro Player PUBG",
+      avatar: "RG",
       rating: 5,
       comment: "Udah langganan disini, selalu aman dan terpercaya"
+    },
+    {
+      name: "Dina Ayu",
+      role: "Subscriber Netflix",
+      avatar: "DA",
+      rating: 5,
+      comment: "Top up Netflix gampang banget, CS nya juga responsif!"
+    }
+  ];
+
+  const blogPosts = [
+    {
+      id: 1,
+      title: "Cara Top Up Mobile Legends Paling Murah & Aman",
+      excerpt: "Panduan lengkap top up diamond ML dengan harga termurah dan proses tercepat.",
+      image: "📱"
+    },
+    {
+      id: 2,
+      title: "Tips Berlangganan Netflix Hemat dengan Voucher",
+      excerpt: "Simak trik berlangganan Netflix dengan harga lebih hemat menggunakan voucher digital.",
+      image: "🎬"
+    },
+    {
+      id: 3,
+      title: "Panduan Keamanan Transaksi Digital untuk Pemula",
+      excerpt: "Pelajari cara bertransaksi online yang aman dan terhindar dari penipuan.",
+      image: "🔒"
+    }
+  ];
+
+  const howItWorks = [
+    {
+      step: 1,
+      icon: <Search className="h-8 w-8" />,
+      title: "Pilih Produk",
+      description: "Pilih game, streaming, atau e-wallet yang kamu inginkan"
+    },
+    {
+      step: 2,
+      icon: <CreditCard className="h-8 w-8" />,
+      title: "Isi Data & Bayar",
+      description: "Masukkan ID/nomor, pilih nominal, dan bayar dengan metode favoritmu"
+    },
+    {
+      step: 3,
+      icon: <Zap className="h-8 w-8" />,
+      title: "Saldo Masuk",
+      description: "Saldo/voucher otomatis masuk ke akun kamu dalam hitungan detik"
     }
   ];
 
@@ -76,6 +139,63 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>TopUpKilat – Top Up Game, Streaming & E-Wallet Tercepat & Termurah di Indonesia</title>
+        <meta name="description" content="Top up game murah Mobile Legends, Free Fire, PUBG. Berlangganan Netflix, Spotify, YouTube Premium. Top up e-wallet OVO, DANA, GoPay. Proses otomatis, harga transparan, support 24/7." />
+        <meta name="keywords" content="top up game murah, top up ml, top up free fire, top up netflix, top up spotify, top up ewallet, top up ovo, top up dana, top up gopay" />
+        <meta property="og:title" content="TopUpKilat – Top Up Game, Streaming & E-Wallet Tercepat" />
+        <meta property="og:description" content="Platform top up terpercaya dengan harga termurah dan proses tercepat di Indonesia" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://digitexa.biz.id" />
+        <link rel="canonical" href="https://digitexa.biz.id" />
+        
+        {/* Structured Data - Organization */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "TopUpKilat",
+              "url": "https://digitexa.biz.id",
+              "logo": "https://digitexa.biz.id/logo.png",
+              "description": "Platform top up game, streaming, dan e-wallet terpercaya di Indonesia dengan proses otomatis 24/7",
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "ID"
+              },
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "Customer Service",
+                "availableLanguage": ["Indonesian", "English"]
+              },
+              "sameAs": [
+                "https://facebook.com/topupkilat",
+                "https://instagram.com/topupkilat",
+                "https://twitter.com/topupkilat"
+              ]
+            })
+          }}
+        />
+        
+        {/* Structured Data - WebSite */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "TopUpKilat",
+              "url": "https://digitexa.biz.id",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://digitexa.biz.id/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+      </Head>
       {/* Navbar */}
       <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-slate-950/95">
         <div className="container mx-auto px-4">
@@ -149,11 +269,30 @@ export default function Home() {
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Top Up Game, Streaming & E-Wallet dalam{' '}
-              <span className="text-yellow-300">Hitungan Menit</span>
+              <span className="text-yellow-300">Hitungan Detik</span>
             </h1>
-            <p className="text-xl mb-8 opacity-90">
-              Bayar via QRIS, e-wallet, atau transfer bank. Harga transparan, proses otomatis. Dukungan 24/7 siap membantu Anda.
+            <p className="text-xl md:text-2xl mb-4 opacity-90">
+              Proses <span className="font-bold text-yellow-300">Otomatis 24/7</span> • Harga <span className="font-bold text-yellow-300">Transparan & Kompetitif</span>
             </p>
+            <p className="text-lg mb-8 opacity-80">
+              Bayar via QRIS, e-wallet, transfer bank & kartu kredit. Dukungan pelanggan siap membantu kapan saja.
+            </p>
+            
+            {/* Social Proof Badges */}
+            <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 mb-8 text-sm md:text-base">
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                <Users className="h-5 w-5 text-yellow-300" />
+                <span className="font-semibold">100.000+ Transaksi</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                <Gamepad2 className="h-5 w-5 text-yellow-300" />
+                <span className="font-semibold">50+ Game & Layanan</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                <Headphones className="h-5 w-5 text-yellow-300" />
+                <span className="font-semibold">Support 24/7</span>
+              </div>
+            </div>
             
             {/* Quick Search Bar */}
             <div className="max-w-2xl mx-auto mb-8">
@@ -179,26 +318,67 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="flex gap-4 justify-center flex-wrap">
+            <div className="flex gap-4 justify-center flex-wrap mb-8">
               <Link href="/topup/game">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 shadow-xl">
                   <Gamepad2 className="mr-2 h-5 w-5" />
                   Top Up Game
                 </Button>
               </Link>
               <Link href="/topup/streaming">
-                <Button size="lg" className="bg-yellow-400 text-gray-900 hover:bg-yellow-300">
+                <Button size="lg" className="bg-yellow-400 text-gray-900 hover:bg-yellow-300 shadow-xl">
                   <Tv className="mr-2 h-5 w-5" />
                   Streaming Services
                 </Button>
               </Link>
               <Link href="/topup/ewallet">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 shadow-xl">
                   <Wallet className="mr-2 h-5 w-5" />
                   Top Up E-Wallet
                 </Button>
               </Link>
             </div>
+
+            {/* Payment Methods Trust Indicators */}
+            <div className="mt-8 pt-8 border-t border-white/20">
+              <p className="text-sm opacity-75 mb-4">Metode Pembayaran Tersedia:</p>
+              <div className="flex flex-wrap justify-center items-center gap-4 opacity-90">
+                <div className="bg-white px-4 py-2 rounded text-gray-700 font-semibold text-sm">QRIS</div>
+                <div className="bg-white px-4 py-2 rounded text-gray-700 font-semibold text-sm">GoPay</div>
+                <div className="bg-white px-4 py-2 rounded text-gray-700 font-semibold text-sm">OVO</div>
+                <div className="bg-white px-4 py-2 rounded text-gray-700 font-semibold text-sm">DANA</div>
+                <div className="bg-white px-4 py-2 rounded text-gray-700 font-semibold text-sm">ShopeePay</div>
+                <div className="bg-white px-4 py-2 rounded text-gray-700 font-semibold text-sm">BCA</div>
+                <div className="bg-white px-4 py-2 rounded text-gray-700 font-semibold text-sm">Mandiri</div>
+                <div className="bg-white px-4 py-2 rounded text-gray-700 font-semibold text-sm">BNI</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-16 bg-white dark:bg-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Cara Top Up di TopUpKilat</h2>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">Mudah, cepat, dan aman hanya dalam 3 langkah</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {howItWorks.map((item) => (
+              <div key={item.step} className="text-center">
+                <div className="relative mb-6">
+                  <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white shadow-lg">
+                    {item.icon}
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center font-bold text-gray-900 shadow-md mx-auto" style={{left: '50%', transform: 'translateX(20px)'}}>
+                    {item.step}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -267,7 +447,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center mb-10">Kenapa TopUpKilat?</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index}>
+              <Card key={index} className="hover:shadow-xl transition-shadow">
                 <CardHeader>
                   <div className="h-12 w-12 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 mb-4">
                     {feature.icon}
@@ -281,26 +461,151 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16">
+      {/* Security & Legal Section */}
+      <section className="py-16 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-800">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-10">Testimoni Pengguna</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Keamanan & Kepercayaan</h2>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">Transaksi aman dan terpercaya dengan jaminan 100%</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <Card className="hover:shadow-xl transition-all hover:-translate-y-1">
+              <CardHeader>
+                <Lock className="h-10 w-10 text-green-600 mb-3" />
+                <CardTitle className="text-lg">Transaksi Terenkripsi</CardTitle>
+                <CardDescription>
+                  Semua data dan transaksi dilindungi dengan enkripsi SSL 256-bit. Informasi pribadi dan pembayaran Anda dijamin aman.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            <Card className="hover:shadow-xl transition-all hover:-translate-y-1">
+              <CardHeader>
+                <Clock className="h-10 w-10 text-blue-600 mb-3" />
+                <CardTitle className="text-lg">Sistem Otomatis 24/7</CardTitle>
+                <CardDescription>
+                  Proses otomatis tanpa intervensi manual. Top up langsung masuk ke akun Anda kapan pun Anda melakukan transaksi.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            <Card className="hover:shadow-xl transition-all hover:-translate-y-1">
+              <CardHeader>
+                <FileText className="h-10 w-10 text-purple-600 mb-3" />
+                <CardTitle className="text-lg">Kebijakan Refund Jelas</CardTitle>
+                <CardDescription>
+                  Kami memiliki <Link href="/legal/refund" className="text-blue-600 hover:underline font-semibold">kebijakan refund</Link> yang transparan. Jika ada masalah, kami siap membantu.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+          <div className="text-center mt-10">
+            <div className="inline-block bg-white dark:bg-slate-800 px-6 py-4 rounded-lg shadow-md">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <strong className="text-gray-900 dark:text-white">Platform Digital Terpercaya</strong>
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-500">
+                Terdaftar sebagai penyedia layanan digital Indonesia • Melayani 100.000+ pengguna aktif
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Order Tracking Highlight */}
+      <section className="py-12 bg-blue-600">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center text-white">
+            <CheckCircle className="h-12 w-12 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold mb-3">Cek Status Transaksi Kapan Saja</h3>
+            <p className="text-blue-100 mb-6">
+              Gunakan fitur <strong>Lacak Pesanan</strong> untuk memantau status top up kamu secara real-time. Masukkan kode pesanan dan email untuk melihat detail lengkap.
+            </p>
+            <Link href="/order/lookup">
+              <Button size="lg" variant="secondary" className="shadow-xl">
+                <Search className="mr-2 h-5 w-5" />
+                Lacak Pesanan Sekarang
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 bg-white dark:bg-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Testimoni Pengguna</h2>
+            <div className="flex items-center justify-center gap-2 text-xl">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-6 w-6 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <span className="font-bold text-gray-900 dark:text-white">4.9/5</span>
+              <span className="text-gray-600 dark:text-gray-400">dari 2.300+ review</span>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {testimonials.map((testimonial, index) => (
-              <Card key={index}>
+              <Card key={index} className="hover:shadow-xl transition-all hover:-translate-y-1">
                 <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="font-semibold">{testimonial.name}</p>
-                    <div className="flex">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      ))}
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg shrink-0">
+                      {testimonial.avatar}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 dark:text-white truncate">{testimonial.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{testimonial.role}</p>
                     </div>
                   </div>
-                  <CardDescription>{testimonial.comment}</CardDescription>
+                  <div className="flex mb-3">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <CardDescription className="text-sm">{testimonial.comment}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Blog/Tips Section */}
+      <section className="py-16 bg-gray-50 dark:bg-slate-900">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Tips & Info Terbaru</h2>
+              <p className="text-gray-600 dark:text-gray-400">Panduan dan artikel seputar top up & gaming</p>
+            </div>
+            <Link href="/blog" className="hidden md:block">
+              <Button variant="outline">
+                Lihat Semua
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {blogPosts.map((post) => (
+              <Card key={post.id} className="hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer">
+                <CardHeader>
+                  <div className="text-5xl mb-4">{post.image}</div>
+                  <CardTitle className="text-lg mb-2 line-clamp-2">{post.title}</CardTitle>
+                  <CardDescription className="line-clamp-2 mb-4">{post.excerpt}</CardDescription>
+                  <Link href={`/blog/${post.id}`} className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center">
+                    Baca selengkapnya <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+          <div className="text-center mt-8 md:hidden">
+            <Link href="/blog">
+              <Button variant="outline">
+                Lihat Semua Artikel
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
