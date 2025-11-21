@@ -29,8 +29,8 @@ const faqs: FAQItem[] = [
     answer: 'Jika top up belum masuk setelah pembayaran berhasil: 1) Tunggu hingga 5 menit karena kadang ada delay dari sistem. 2) Cek status pesanan di menu "Lacak Pesanan" dengan memasukkan kode pesanan dan email. 3) Jika sudah lebih dari 10 menit, hubungi CS kami melalui WhatsApp dengan menyertakan bukti pembayaran dan kode pesanan.'
   },
   {
-    question: 'Apakah TopUpKilat aman?',
-    answer: 'Ya, sangat aman! TopUpKilat menggunakan sistem enkripsi SSL 256-bit untuk melindungi semua transaksi dan data pribadi kamu. Kami juga menggunakan payment gateway resmi dan terpercaya. Semua proses berjalan otomatis melalui sistem yang sudah terintegrasi dengan provider resmi.'
+    question: 'Bagaimana cara memastikan transaksi saya aman?',
+    answer: 'Untuk transaksi yang aman, ikuti panduan berikut: 1) Pastikan alamat web dimulai dengan https:// dan ada ikon gembok. 2) JANGAN PERNAH bagikan password, PIN, atau kode OTP ke siapapun - CS resmi tidak akan pernah meminta ini. 3) Gunakan metode pembayaran resmi (QRIS, e-wallet, virtual account). 4) Simpan bukti transaksi. 5) Pakai password yang kuat dan berbeda untuk setiap akun. 6) Waspada terhadap promo yang terlalu menggiurkan. 7) Gunakan jaringan internet yang aman (hindari WiFi publik untuk transaksi). TopUpKilat sendiri menggunakan enkripsi SSL 256-bit, payment gateway resmi, dan sistem otomatis terintegrasi dengan provider resmi untuk melindungi data dan transaksi Anda.'
   },
   {
     question: 'Bagaimana kebijakan refund di TopUpKilat?',
@@ -51,6 +51,22 @@ const faqs: FAQItem[] = [
   {
     question: 'Bagaimana jika saya salah memasukkan ID/nomor tujuan?',
     answer: 'Harap berhati-hati saat memasukkan ID/nomor tujuan. Jika top up sudah diproses dan berhasil masuk ke ID yang salah, kami tidak dapat membatalkan atau memindahkan saldo tersebut. Pastikan selalu mengecek kembali ID/nomor sebelum melakukan pembayaran. Gunakan fitur verifikasi ID jika tersedia.'
+  },
+  {
+    question: 'Apa saja yang TIDAK boleh saya bagikan saat transaksi?',
+    answer: 'Jangan PERNAH bagikan: 1) Password akun (email, game, e-wallet, bank). 2) PIN ATM atau kartu debit. 3) Kode OTP yang dikirim via SMS/email. 4) CVV kartu kredit (3 digit di belakang kartu) kecuali saat checkout resmi di payment gateway. 5) Foto/scan KTP untuk transaksi yang tidak relevan. CS resmi TopUpKilat TIDAK PERNAH meminta informasi sensitif tersebut. Yang wajar dibagikan hanya: User ID game, nomor HP tujuan, atau email untuk konfirmasi.'
+  },
+  {
+    question: 'Bagaimana cara mengenali website atau penawaran yang mencurigakan?',
+    answer: 'Ciri-ciri penipuan online: 1) Harga terlalu murah dan tidak masuk akal. 2) Meminta data sensitif seperti password/OTP via chat atau email. 3) Domain website mirip tapi berbeda (contoh: t0pupkilat.com dengan angka nol). 4) Ada banyak typo atau grammar buruk. 5) Tekanan untuk transaksi cepat dengan dalih "promo terbatas waktu sangat singkat". 6) Diminta transfer ke rekening pribadi, bukan payment gateway resmi. Selalu cek: URL dimulai dengan https://, ada ikon gembok, dan nama domain benar. Ketik alamat website langsung di browser atau gunakan bookmark.'
+  },
+  {
+    question: 'Apakah aman transaksi menggunakan WiFi publik?',
+    answer: 'Sebaiknya HINDARI transaksi penting (termasuk top up yang melibatkan pembayaran) saat menggunakan WiFi publik yang tidak jelas keamanannya. Gunakan data seluler atau WiFi pribadi untuk transaksi. Jika terpaksa menggunakan WiFi publik, jangan: 1) Login ke aplikasi bank. 2) Memasukkan data kartu kredit. 3) Transaksi yang melibatkan data sensitif. WiFi publik rentan terhadap penyadapan data oleh pihak tidak bertanggung jawab.'
+  },
+  {
+    question: 'Apa yang harus saya lakukan jika menerima chat/pesan mencurigakan yang mengaku dari TopUpKilat?',
+    answer: 'Jika menerima chat/pesan mencurigakan: 1) JANGAN klik link yang dikirim. 2) JANGAN berikan informasi apapun. 3) Cek langsung ke website resmi TopUpKilat (digitexa.biz.id). 4) Hubungi CS resmi kami melalui kontak yang tertera di website (WhatsApp: +62 896-3301-1300 atau email: admin@irvantratechnologies.my.id) untuk konfirmasi. 5) Laporkan chat/pesan tersebut. Ingat: CS resmi tidak akan meminta password, OTP, atau PIN. Kami juga tidak mengirim link pembayaran via chat pribadi yang tidak diminta.'
   }
 ];
 

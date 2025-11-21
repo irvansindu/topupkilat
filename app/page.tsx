@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Logo } from "@/components/Logo";
 import Head from 'next/head';
 
 export default function Home() {
@@ -201,8 +202,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-              <Zap className="h-6 w-6 text-blue-600" />
-              <span className="text-xl font-bold">TopUpKilat</span>
+              <Logo size="md" />
             </Link>
             
             <div className="hidden md:flex items-center space-x-6">
@@ -639,9 +639,8 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Zap className="h-6 w-6 text-blue-400" />
-                <span className="text-xl font-bold text-white">TopUpKilat</span>
+              <div className="mb-4">
+                <Logo size="md" className="text-white" />
               </div>
               <p className="text-sm">
                 Platform top up game dan e-wallet terpercaya di Indonesia
