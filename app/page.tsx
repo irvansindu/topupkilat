@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo } from "@/components/Logo";
+import { FloatingSupport } from "@/components/FloatingSupport";
 import Head from 'next/head';
 
 export default function Home() {
@@ -140,6 +141,7 @@ export default function Home() {
 
   return (
     <>
+      <FloatingSupport />
       <Head>
         <title>TopUpKilat – Top Up Game, Streaming & E-Wallet Tercepat & Termurah di Indonesia</title>
         <meta name="description" content="Top up game murah Mobile Legends, Free Fire, PUBG. Berlangganan Netflix, Spotify, YouTube Premium. Top up e-wallet OVO, DANA, GoPay. Proses otomatis, harga transparan, support 24/7." />
@@ -274,8 +276,11 @@ export default function Home() {
             <p className="text-xl md:text-2xl mb-4 opacity-90">
               Proses <span className="font-bold text-yellow-300">Otomatis 24/7</span> • Harga <span className="font-bold text-yellow-300">Transparan & Kompetitif</span>
             </p>
-            <p className="text-lg mb-8 opacity-80">
+            <p className="text-lg mb-4 opacity-80">
               Bayar via QRIS, e-wallet, transfer bank & kartu kredit. Dukungan pelanggan siap membantu kapan saja.
+            </p>
+            <p className="text-sm mb-8 opacity-75 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full inline-block">
+              ⚡ Mayoritas pesanan diproses otomatis dalam hitungan detik hingga beberapa menit
             </p>
             
             {/* Social Proof Badges */}
@@ -320,19 +325,19 @@ export default function Home() {
             
             <div className="flex gap-4 justify-center flex-wrap mb-8">
               <Link href="/topup/game">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 shadow-xl">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-50 shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-1">
                   <Gamepad2 className="mr-2 h-5 w-5" />
                   Top Up Game
                 </Button>
               </Link>
               <Link href="/topup/streaming">
-                <Button size="lg" className="bg-yellow-400 text-gray-900 hover:bg-yellow-300 shadow-xl">
+                <Button size="lg" className="bg-yellow-400 text-gray-900 hover:bg-yellow-300 shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-1">
                   <Tv className="mr-2 h-5 w-5" />
                   Streaming Services
                 </Button>
               </Link>
               <Link href="/topup/ewallet">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 shadow-xl">
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-1 bg-white/5 backdrop-blur-sm">
                   <Wallet className="mr-2 h-5 w-5" />
                   Top Up E-Wallet
                 </Button>

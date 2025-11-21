@@ -125,13 +125,17 @@ export default function FAQPage() {
                     </div>
                   </div>
                 </CardHeader>
-                {openIndex === index && (
-                  <CardContent className="pt-0 pb-4">
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <div 
+                  className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                    openIndex === index ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  <CardContent className="pt-0 pb-6 px-6">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base">
                       {faq.answer}
                     </p>
                   </CardContent>
-                )}
+                </div>
               </Card>
             ))}
           </div>

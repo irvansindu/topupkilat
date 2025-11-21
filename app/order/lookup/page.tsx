@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FloatingSupport } from "@/components/FloatingSupport";
 import { ArrowLeft, Search, Package, Clock, CheckCircle, XCircle, RefreshCw } from "lucide-react";
 import Link from "next/link";
 
@@ -115,8 +116,10 @@ export default function OrderLookupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
-      {/* Header */}
+    <>
+      <FloatingSupport />
+      <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+        {/* Header */}
       <div className="bg-white dark:bg-slate-950 border-b">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center space-x-4">
@@ -345,6 +348,7 @@ export default function OrderLookupPage() {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

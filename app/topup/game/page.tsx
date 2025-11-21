@@ -1,6 +1,12 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LoadingSkeleton } from "@/components/LoadingState";
+import { ErrorState } from "@/components/ErrorState";
+import { FloatingSupport } from "@/components/FloatingSupport";
 import { ArrowLeft, Search } from "lucide-react";
 
 // Mock data - will be replaced with database query
@@ -22,8 +28,37 @@ const games = [
 const categories = ['Semua', 'MOBA', 'Battle Royale', 'RPG', 'FPS', 'Platform', 'Sports', 'Party'];
 
 export default function GameCatalogPage() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Semua');
+
+  useEffect(() => {
+    // Simulate data loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRetry = () => {
+    setError(false);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  };
+
+  const filteredGames = games.filter(game => {
+    const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'Semua' || game.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+    <>
+      <FloatingSupport />
+      <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
       {/* Header */}
       <div className="bg-white dark:bg-slate-950 border-b">
         <div className="container mx-auto px-4 py-6">
@@ -42,7 +77,9 @@ export default function GameCatalogPage() {
               <input
                 type="text"
                 placeholder="Cari game favorit kamu..."
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
               />
             </div>
           </div>
@@ -52,9 +89,10 @@ export default function GameCatalogPage() {
             {categories.map((category) => (
               <Button
                 key={category}
-                variant={category === 'Semua' ? 'default' : 'outline'}
+                variant={category === selectedCategory ? 'default' : 'outline'}
                 size="sm"
                 className="whitespace-nowrap"
+                onClick={() => setSelectedCategory(category)}
               >
                 {category}
               </Button>
@@ -63,43 +101,65 @@ export default function GameCatalogPage() {
         </div>
       </div>
       
-      {/* Popular Games */}
+      {/* Games Content */}
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">🔥 Game Populer</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {games.filter(g => g.popular).map((game) => (
-              <Link key={game.id} href={`/topup/game/${game.id}`}>
-                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="text-4xl mb-3 text-center">{game.icon}</div>
-                    <p className="text-sm font-medium text-center">{game.name}</p>
-                    <p className="text-xs text-gray-500 text-center mt-1">{game.category}</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+        {loading ? (
+          <LoadingSkeleton />
+        ) : error ? (
+          <ErrorState onRetry={handleRetry} />
+        ) : filteredGames.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-gray-400 mb-4">Tidak ada game yang ditemukan untuk &quot;{searchQuery}&quot;</p>
+            <Button variant="outline" onClick={() => { setSearchQuery(''); setSelectedCategory('Semua'); }}>Reset Pencarian</Button>
           </div>
-        </div>
-        
-        {/* All Games */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Semua Game</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {games.map((game) => (
-              <Link key={game.id} href={`/topup/game/${game.id}`}>
-                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="text-4xl mb-3 text-center">{game.icon}</div>
-                    <p className="text-sm font-medium text-center">{game.name}</p>
-                    <p className="text-xs text-gray-500 text-center mt-1">{game.category}</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </div>
+        ) : (
+          <>
+            {/* Popular Games - only show when no filter */}
+            {selectedCategory === 'Semua' && searchQuery === '' && (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-4">🔥 Game Populer</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {games.filter(g => g.popular).map((game) => (
+                    <Link key={game.id} href={`/topup/game/${game.id}`}>
+                      <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
+                        <CardContent className="p-6">
+                          <div className="text-4xl mb-3 text-center">{game.icon}</div>
+                          <p className="text-sm font-medium text-center">{game.name}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">{game.category}</p>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* All/Filtered Games */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4">
+                {selectedCategory === 'Semua' && searchQuery === '' 
+                  ? 'Semua Game'
+                  : `Hasil Pencarian ${searchQuery ? `"${searchQuery}"` : ''} ${selectedCategory !== 'Semua' ? `- ${selectedCategory}` : ''}`
+                }
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                {filteredGames.map((game) => (
+                  <Link key={game.id} href={`/topup/game/${game.id}`}>
+                    <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
+                      <CardContent className="p-6">
+                        <div className="text-4xl mb-3 text-center">{game.icon}</div>
+                        <p className="text-sm font-medium text-center">{game.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">{game.category}</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
