@@ -149,8 +149,9 @@ export async function POST(request: NextRequest) {
       customerEmail: order.contactEmail,
       customerPhone: order.contactWhatsapp,
       description: `Top Up ${product.name} - ${denomination.label}`,
-      successRedirectUrl: `${process.env.APP_BASE_URL}/order/${order.code}/success`,
-      failureRedirectUrl: `${process.env.APP_BASE_URL}/order/${order.code}/failed`,
+      // Biarkan Midtrans / browser yang meng-encode URL, jangan encode dua kali di sini
+      successRedirectUrl: `${process.env.APP_BASE_URL}/order/${order.code}/success?email=${order.contactEmail}`,
+      failureRedirectUrl: `${process.env.APP_BASE_URL}/order/${order.code}/failed?email=${order.contactEmail}`,
     });
     
     // Update order with payment reference

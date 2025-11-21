@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Wallet, RefreshCw, AlertTriangle, User, Shield } from 'lucide-react';
@@ -22,6 +24,8 @@ interface ApiResponse {
 }
 
 export default function ProviderAdminPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,8 +49,15 @@ export default function ProviderAdminPage() {
   };
 
   useEffect(() => {
+    if (status === 'loading') return;
+
+    if (!session || session.user?.role !== 'ADMIN') {
+      router.replace('/');
+      return;
+    }
+
     fetchProfile();
-  }, []);
+  }, [status, session]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -55,6 +66,18 @@ export default function ProviderAdminPage() {
       minimumFractionDigits: 0,
     }).format(value);
   };
+
+  if (status === 'loading' || (session && session.user?.role === 'ADMIN' && loading)) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
+        <p className="text-sm text-slate-400">Memuat halaman admin...</p>
+      </div>
+    );
+  }
+
+  if (!session || session.user?.role !== 'ADMIN') {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">

@@ -148,19 +148,58 @@ export default function CheckoutPage() {
     }
 
     setProcessing(true);
+    
+    try {
+      if (!checkoutData?.productId || !checkoutData?.denominationId) {
+        alert('Data produk tidak lengkap. Silakan ulangi dari halaman produk.');
+        setProcessing(false);
+        return;
+      }
 
-    // Simulate API call
-    setTimeout(() => {
-      // Generate order code
-      const code = 'TK' + Date.now().toString().slice(-8);
-      setOrderCode(code);
-      
-      // Clear checkout data
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: checkoutData.productId,
+          denominationId: checkoutData.denominationId,
+          target: {
+            uid: checkoutData.userId,
+            zoneId: checkoutData.zoneId,
+            phone: checkoutData.phone,
+          },
+          contactEmail: customerEmail,
+          contactWhatsapp: customerPhone || checkoutData.phone || '',
+          paymentMethod: selectedPayment,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const message = errorData.error || 'Gagal membuat pesanan. Silakan coba lagi.';
+        alert(message);
+        setProcessing(false);
+        return;
+      }
+
+      const data = await response.json();
+      const order = data.order;
+
+      if (!order || !order.paymentUrl) {
+        alert('Gagal mendapatkan URL pembayaran. Silakan coba lagi.');
+        setProcessing(false);
+        return;
+      }
+
       sessionStorage.removeItem('checkoutData');
-      
-      // Show success state
+
+      window.location.href = order.paymentUrl as string;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
       setProcessing(false);
-    }, 2000);
+    }
   };
 
   const copyOrderCode = () => {

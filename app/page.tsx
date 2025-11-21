@@ -113,9 +113,11 @@ export default function Home() {
                   <span className="hidden md:inline text-sm text-gray-700 dark:text-gray-200">
                     {session.user.name || session.user.email}
                   </span>
-                  <Link href="/admin/provider">
-                    <Button variant="outline" size="sm">Admin</Button>
-                  </Link>
+                  {session.user.role === 'ADMIN' && (
+                    <Link href="/admin/provider">
+                      <Button variant="outline" size="sm">Admin</Button>
+                    </Link>
+                  )}
                   <Button
                     size="sm"
                     variant="ghost"
