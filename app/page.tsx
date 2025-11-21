@@ -72,6 +72,8 @@ export default function Home() {
     }
   ];
 
+  const user = session?.user ? (session.user as typeof session.user & { role?: string }) : null;
+
   return (
     <>
       {/* Navbar */}
@@ -113,7 +115,7 @@ export default function Home() {
                   <span className="hidden md:inline text-sm text-gray-700 dark:text-gray-200">
                     {session.user.name || session.user.email}
                   </span>
-                  {session.user.role === 'ADMIN' && (
+                  {user?.role === 'ADMIN' && (
                     <Link href="/admin/provider">
                       <Button variant="outline" size="sm">Admin</Button>
                     </Link>

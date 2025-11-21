@@ -51,13 +51,20 @@ export default function ProviderAdminPage() {
   useEffect(() => {
     if (status === 'loading') return;
 
-    if (!session || session.user?.role !== 'ADMIN') {
+    if (!session || !session.user) {
+      router.replace('/');
+      return;
+    }
+
+    const currentUser = session.user as { role?: string };
+
+    if (currentUser.role !== 'ADMIN') {
       router.replace('/');
       return;
     }
 
     fetchProfile();
-  }, [status, session]);
+  }, [status, session, router]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -67,7 +74,9 @@ export default function ProviderAdminPage() {
     }).format(value);
   };
 
-  if (status === 'loading' || (session && session.user?.role === 'ADMIN' && loading)) {
+  const user = session?.user ? (session.user as { role?: string }) : undefined;
+
+  if (status === 'loading' || (user && user.role === 'ADMIN' && loading)) {
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
         <p className="text-sm text-slate-400">Memuat halaman admin...</p>
@@ -75,7 +84,7 @@ export default function ProviderAdminPage() {
     );
   }
 
-  if (!session || session.user?.role !== 'ADMIN') {
+  if (!user || user.role !== 'ADMIN') {
     return null;
   }
 
