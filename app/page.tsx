@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSession, signOut } from 'next-auth/react';
+import { useState } from 'react';
 import {
   Gamepad2,
   Wallet,
@@ -19,6 +20,8 @@ import {
   Lock,
   FileText,
   ArrowRight,
+  Menu,
+  X,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,6 +31,7 @@ import Head from 'next/head';
 
 export default function Home() {
   const { data: session, status } = useSession();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const popularGames = [
     { id: 'mlbb', name: 'Mobile Legends', icon: '🎮' },
     { id: 'ff', name: 'Free Fire', icon: '🔫' },
@@ -207,6 +211,7 @@ export default function Home() {
               <Logo size="md" />
             </Link>
             
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <Link href="/topup/game" className="text-sm font-medium hover:text-blue-600">
                 Game
@@ -229,7 +234,8 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="flex items-center space-x-4">
+            {/* Desktop Auth Buttons */}
+            <div className="hidden md:flex items-center space-x-4">
               {status === 'loading' ? (
                 <span className="text-xs text-gray-500">Mengecek sesi...</span>
               ) : session?.user ? (
@@ -261,7 +267,112 @@ export default function Home() {
                 </>
               )}
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden border-t bg-white dark:bg-slate-950 py-4 space-y-3">
+              <Link 
+                href="/topup/game" 
+                className="block px-4 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-900 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Gamepad2 className="h-4 w-4 inline mr-2" />
+                Top Up Game
+              </Link>
+              <Link 
+                href="/topup/streaming" 
+                className="block px-4 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-900 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Tv className="h-4 w-4 inline mr-2" />
+                Streaming
+              </Link>
+              <Link 
+                href="/topup/pulsa" 
+                className="block px-4 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-900 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Zap className="h-4 w-4 inline mr-2" />
+                Pulsa & Data
+              </Link>
+              <Link 
+                href="/topup/ewallet" 
+                className="block px-4 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-900 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Wallet className="h-4 w-4 inline mr-2" />
+                E-Wallet
+              </Link>
+              <Link 
+                href="/socialmedia" 
+                className="block px-4 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-900 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Users className="h-4 w-4 inline mr-2" />
+                Social Media
+              </Link>
+              <Link 
+                href="/order/lookup" 
+                className="block px-4 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-900 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Search className="h-4 w-4 inline mr-2" />
+                Lacak Pesanan
+              </Link>
+              
+              {/* Mobile Auth Section */}
+              <div className="border-t pt-3 mt-3 px-4 space-y-2">
+                {status === 'loading' ? (
+                  <span className="text-xs text-gray-500">Mengecek sesi...</span>
+                ) : session?.user ? (
+                  <>
+                    <p className="text-sm text-gray-700 dark:text-gray-200 font-medium mb-2">
+                      {session.user.name || session.user.email}
+                    </p>
+                    {user?.role === 'ADMIN' && (
+                      <Link href="/admin/provider" onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="outline" size="sm" className="w-full mb-2">Admin Panel</Button>
+                      </Link>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="w-full"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        signOut({ callbackUrl: '/' });
+                      }}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <div className="flex gap-2">
+                    <Link href="/auth/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="outline" size="sm" className="w-full">Masuk</Button>
+                    </Link>
+                    <Link href="/auth/register" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
+                      <Button size="sm" className="w-full">Daftar</Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
